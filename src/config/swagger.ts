@@ -21,6 +21,16 @@ export const waterLogSchema = registry.register('WaterLog', z.object({
   loggedAt: z.string().datetime().optional().openapi({ example: '2026-04-06T16:15:00Z' })
 }));
 
+export const waterLogRequestSchema = registry.register('WaterLogRequest', z.object({
+  userId: z.string().length(24, 'ID de usuário inválido (precisa ser um ObjectId do Mongo)').openapi({ example: '6612d32ba9f13d8d64111f11' }),
+  amount: z.number().int().positive('A quantidade de água deve ser positiva').openapi({ example: 250 }),
+  date: z.string().openapi({ description: 'Data do registro', example: '2023-10-25' })
+}));
+
+export const waterLogResponseSchema = registry.register('WaterLogResponse', z.object({
+  amount: z.number().int().positive().openapi({ example: 250 })
+}));
+
 // Register the paths
 registry.registerPath({
   method: 'post',
@@ -75,7 +85,7 @@ registry.registerPath({
     body: {
       content: {
         'application/json': {
-          schema: waterLogSchema,
+          schema: waterLogRequestSchema,
         },
       },
     },
@@ -83,6 +93,11 @@ registry.registerPath({
   responses: {
     201: {
       description: 'Water intake logged successfully',
+      content: {
+        'application/json': {
+          schema: waterLogResponseSchema,
+        },
+      },
     },
     400: {
       description: 'Invalid request data',
