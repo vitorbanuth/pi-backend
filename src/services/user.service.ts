@@ -1,4 +1,4 @@
-import { prisma } from '../config/prisma';
+import User from '../models/User';
 import { userSchema } from '../config/swagger';
 
 export class UserService {
@@ -8,14 +8,11 @@ export class UserService {
 
     // In a real app, hash the password here before saving
     
-    return prisma.user.create({
-      data: validatedData
-    });
+    const user = new User(validatedData);
+    return user.save();
   }
 
   async getUserById(id: string) {
-    return prisma.user.findUnique({
-      where: { id }
-    });
+    return User.findById(id);
   }
 }

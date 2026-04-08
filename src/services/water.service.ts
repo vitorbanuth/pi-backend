@@ -1,4 +1,4 @@
-import { prisma } from '../config/prisma';
+import WaterLog from '../models/WaterLog';
 import { waterLogSchema } from '../config/swagger';
 
 export class WaterService {
@@ -7,12 +7,11 @@ export class WaterService {
     const validatedData = waterLogSchema.parse(data);
 
     // Salva no banco
-    return prisma.waterLog.create({
-      data: {
-        userId: validatedData.userId,
-        amountMl: validatedData.amountMl,
-        loggedAt: validatedData.loggedAt ? new Date(validatedData.loggedAt) : new Date(),
-      }
+    const waterLog = new WaterLog({
+      userId: validatedData.userId,
+      amountMl: validatedData.amountMl,
+      loggedAt: validatedData.loggedAt ? new Date(validatedData.loggedAt) : new Date(),
     });
+    return waterLog.save();
   }
 }

@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import express from 'express';
 import swaggerUi from 'swagger-ui-express';
-import { prisma } from './config/prisma';
+import { connectDB } from './config/db';
 import { logger } from './utils/logger';
 import { generateOpenAPI } from './config/swagger';
 
@@ -29,10 +29,5 @@ app.use('/api/water', waterRoutes);
 app.listen(port, async () => {
   logger.info(`🚀 API is running and functional at: http://localhost:${port}`);
   logger.info(`📚 Swagger Documentation available at: http://localhost:${port}/api-docs`);
-  try {
-    await prisma.$connect();
-    logger.success('📦 Connected to MongoDB via Prisma');
-  } catch (error) {
-    logger.error('❌ Failed to connect to the database', error);
-  }
+  await connectDB();
 });
