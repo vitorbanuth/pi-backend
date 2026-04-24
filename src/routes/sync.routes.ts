@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { DailyLogController } from '../controllers/dailylog.controller';
+import { DailyLogController } from '../controllers/dailyLog.controller';
 
 const router = Router();
 const dailyLogController = new DailyLogController();
