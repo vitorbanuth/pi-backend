@@ -19,7 +19,7 @@ app.get('/health', (req, res) => {
 });
 
 import userRoutes from './routes/user.routes';
-import waterRoutes from './routes/water.routes';
+import waterRoutes from './routes/sync.routes';
 
 // Add routes here later
 app.use('/api/users', userRoutes);
