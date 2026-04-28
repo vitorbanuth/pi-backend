@@ -25,6 +25,8 @@ const DailyLogSchema: Schema = new Schema({
 
   date: { type: Date, required: true },
 
+  
+
   nutrition: {
     kcal: { type: Number, default: 0 },
     carbs: { type: Number, default: 0 },
