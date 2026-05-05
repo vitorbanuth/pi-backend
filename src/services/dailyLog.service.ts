@@ -1,4 +1,6 @@
 import DailyLog from "../models/DailyLog";
+import { Patient } from "../models/Patient";
+
 import { z } from "zod";
 
 export const dailyLogSchema = z.object({
@@ -25,13 +27,15 @@ function normalizeDate(date: Date) {
   return new Date(date.setHours(0, 0, 0, 0));
 }
 
+
+
 export class DailyLogService {
   async syncDay(data: unknown) {
     const validated = dailyLogSchema.parse(data);
 
     const date = normalizeDate(new Date(validated.date));
 
-    return DailyLog.findOneAndUpdate(
+    const log = await DailyLog.findOneAndUpdate(
       {
         patient: validated.patient,
         date: date,
@@ -47,11 +51,15 @@ export class DailyLogService {
         new: true,
       },
     );
-  }
 
-  async getLatestForPatient(patientId: string) {
-    return DailyLog.findOne({ patient: patientId })
-      .sort({ date: -1 })
-      .lean();
+    // 👉 ATUALIZA latestLog
+    await Patient.findByIdAndUpdate(validated.patient, {
+      latestLog: {
+        nutrition: validated.nutrition,
+        hydration: validated.hydration,
+      },
+    });
+
+    return log;
   }
 }
