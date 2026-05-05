@@ -62,4 +62,8 @@ export class DailyLogService {
 
     return log;
   }
+
+  async getLatestForPatient(patientId: string) {
+    return DailyLog.findOne({ patient: patientId }).sort({ date: -1 });
+  }
 }
