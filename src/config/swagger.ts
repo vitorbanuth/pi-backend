@@ -5,14 +5,22 @@ import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi';
 extendZodWithOpenApi(z);
 export const registry = new OpenAPIRegistry();
 
-// Register the schemas
 export const userSchema = registry.register('User', z.object({
-  email: z.string().email(),
+  email: z.string().email().optional(),
   name: z.string().optional(),
-  password: z.string().min(6), // Password will need hashing later
+  password: z.string().min(6).optional(),
   age: z.number().int().optional(),
   weight: z.number().optional(),
-  goal: z.string().optional()
+  goal: z.string().optional(),
+  status: z.enum(['Ativo', 'Inativo']).optional(),
+  lastVisit: z.string().optional(),
+  compliance: z.number().min(0).max(100).optional(),
+  macroTargets: z.object({
+    protein: z.number().min(0),
+    carbs: z.number().min(0),
+    fat: z.number().min(0),
+  }).optional(),
+  waterGoal: z.number().min(0).optional(),
 }));
 
 export const waterLogSchema = registry.register('WaterLog', z.object({
@@ -31,12 +39,11 @@ export const waterLogResponseSchema = registry.register('WaterLogResponse', z.ob
   amount: z.number().int().positive().openapi({ example: 250 })
 }));
 
-// Register the paths
 registry.registerPath({
   method: 'post',
   path: '/api/users',
-  description: 'Create a new user',
-  summary: 'Create User',
+  description: 'Create a new patient',
+  summary: 'Create Patient',
   request: {
     body: {
       content: {
@@ -47,61 +54,50 @@ registry.registerPath({
     },
   },
   responses: {
-    201: {
-      description: 'User created successfully',
-    },
-    400: {
-      description: 'Invalid request data',
-    },
+    201: { description: 'Patient created successfully' },
+    400: { description: 'Invalid request data' },
+  },
+});
+
+registry.registerPath({
+  method: 'get',
+  path: '/api/users',
+  description: 'List all patients with their latest daily log',
+  summary: 'List Patients',
+  responses: {
+    200: { description: 'List of patients' },
   },
 });
 
 registry.registerPath({
   method: 'get',
   path: '/api/users/{id}',
-  description: 'Get user by ID',
-  summary: 'Get User',
+  description: 'Get patient by ID',
+  summary: 'Get Patient',
   request: {
     params: z.object({
-      id: z.string().openapi({ description: 'User ID' })
+      id: z.string().openapi({ description: 'Patient ID' })
     })
   },
   responses: {
-    200: {
-      description: 'User details',
-    },
-    404: {
-      description: 'User not found',
-    },
+    200: { description: 'Patient details' },
+    404: { description: 'Patient not found' },
   },
 });
 
 registry.registerPath({
-  method: 'post',
-  path: '/api/water/intake',
-  description: 'Log water intake for a user',
-  summary: 'Log Water',
+  method: 'get',
+  path: '/api/water/patient/{id}',
+  description: 'Get latest daily log for a patient',
+  summary: 'Get Latest Daily Log',
   request: {
-    body: {
-      content: {
-        'application/json': {
-          schema: waterLogRequestSchema,
-        },
-      },
-    },
+    params: z.object({
+      id: z.string().openapi({ description: 'Patient ID' })
+    })
   },
   responses: {
-    201: {
-      description: 'Water intake logged successfully',
-      content: {
-        'application/json': {
-          schema: waterLogResponseSchema,
-        },
-      },
-    },
-    400: {
-      description: 'Invalid request data',
-    },
+    200: { description: 'Latest daily log' },
+    404: { description: 'No log found' },
   },
 });
 

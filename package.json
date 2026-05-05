@@ -8,7 +8,7 @@
     "dev": "nodemon src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
-    "dev:all": "docker-compose up -d --wait && npm run dev"
+    "dev:all": "docker compose up -d --wait && npm run dev"
   },
   "keywords": [],
   "author": "",
@@ -16,12 +16,14 @@
   "type": "commonjs",
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "^8.5.0",
+    "cors": "^2.8.6",
     "express": "^5.2.1",
     "mongoose": "^9.4.1",
     "swagger-ui-express": "^5.0.1",
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/mongoose": "^5.11.96",
     "@types/node": "^25.5.2",

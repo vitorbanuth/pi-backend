@@ -22,4 +22,16 @@ export class DailyLogController {
       });
     }
   }
+
+  async getLatestForPatient(req: Request, res: Response) {
+    try {
+      const log = await dailyLogService.getLatestForPatient(req.params.id as string);
+      if (!log) {
+        return res.status(404).json({ error: 'Nenhum registro encontrado para este paciente.' });
+      }
+      res.status(200).json(log);
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
+    }
+  }
 }

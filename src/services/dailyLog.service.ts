@@ -1,5 +1,4 @@
 import DailyLog from "../models/DailyLog";
-
 import { z } from "zod";
 
 export const dailyLogSchema = z.object({
@@ -48,5 +47,11 @@ export class DailyLogService {
         new: true,
       },
     );
+  }
+
+  async getLatestForPatient(patientId: string) {
+    return DailyLog.findOne({ patient: patientId })
+      .sort({ date: -1 })
+      .lean();
   }
 }
