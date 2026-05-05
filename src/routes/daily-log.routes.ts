@@ -2,8 +2,8 @@ import { Router } from 'express';
 import { DailyLogController } from '../controllers/dailyLog.controller';
 
 const router = Router();
-const dailyLogController = new DailyLogController();
+const controller = new DailyLogController();
 
-router.post('/sync', (req, res) => dailyLogController.syncDay(req, res));
+router.post('/sync', (req, res) => controller.syncDay(req, res));
 
 export default router;

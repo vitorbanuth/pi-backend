@@ -5,6 +5,8 @@ import { connectDB } from './config/db';
 import { logger } from './utils/logger';
 import { generateOpenAPI } from './config/swagger';
 import cors from 'cors';
+import patientRoutes from './routes/patient.routes';
+import dailyLogRoutes from './routes/daily-log.routes';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -21,11 +23,12 @@ app.get('/health', (req, res) => {
   res.status(200).json({ status: 'OK', message: 'Diet App API is running' });
 });
 
-import patientRoutes from './routes/patient.routes';
-import waterRoutes from './routes/sync.routes';
+
+
 
 // Add routes here later
 app.use('/api/users', patientRoutes);
+app.use('/api/daily-log', dailyLogRoutes);
 
 // app.use('/api/foods', foodRoutes);
 // app.use('/api/water', waterRoutes);
