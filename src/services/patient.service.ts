@@ -28,6 +28,10 @@ export class PatientService {
     return Patient.create(data);
   }
 
+  async updatePatient(id: string, data: any) {
+    return Patient.findByIdAndUpdate(id, data, { new: true, runValidators: true });
+  }
+
   async deletePatient(id: string) {
     return Patient.findByIdAndDelete(id);
   }

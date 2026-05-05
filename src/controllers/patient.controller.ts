@@ -53,12 +53,27 @@ export class PatientController {
     }
   }
 
-  // async delete(req: Request, res: Response) {
-  //   try {
-  //     await patientService.deletePatient(req.params.id);
-  //     res.status(204).send();
-  //   } catch (error: any) {
-  //     res.status(400).json({ error: error.message });
-  //   }
-  // }
+  async update(req: Request, res: Response) {
+    try {
+      const patient = await patientService.updatePatient(req.params.id as string, req.body);
+      if (!patient) {
+        return res.status(404).json({ error: 'Paciente não encontrado' });
+      }
+      res.status(200).json(patient);
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
+    }
+  }
+
+  async delete(req: Request, res: Response) {
+    try {
+      const patient = await patientService.deletePatient(req.params.id as string);
+      if (!patient) {
+        return res.status(404).json({ error: 'Paciente não encontrado' });
+      }
+      res.status(204).send();
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
+    }
+  }
 }
