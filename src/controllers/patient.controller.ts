@@ -71,7 +71,7 @@ export class PatientController {
       if (!patient) {
         return res.status(404).json({ error: 'Paciente não encontrado' });
       }
-      res.status(204).send();
+      res.status(200).json({ success: true });
     } catch (error: any) {
       res.status(400).json({ error: error.message });
     }
