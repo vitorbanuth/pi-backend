@@ -48,7 +48,7 @@ export class DailyLogService {
       },
       {
         upsert: true,
-        new: true,
+        returnDocument: 'after',
       },
     );
 

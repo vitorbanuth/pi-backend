@@ -228,7 +228,7 @@ registry.registerPath({
   path: '/api/food-log/sync',
   tags: ['Food Log'],
   summary: 'Sincronizar alimentações',
-  description: 'Insere um ou mais registros de alimentos consumidos por um usuário. Cada entrada é salva individualmente.',
+  description: 'Recebe os registros de alimentos do app e faz upsert no banco. A chave de identificação é `userId + name + consumedAt` — se o registro já existir, os macros são atualizados; caso contrário, um novo documento é criado.',
   request: {
     body: {
       content: { 'application/json': { schema: FoodLogSyncSchema } },

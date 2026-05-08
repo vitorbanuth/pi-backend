@@ -26,20 +26,33 @@ export class FoodLogService {
   async syncEntries(data: unknown) {
     const validated = foodLogSyncSchema.parse(data);
 
-    const docs = validated.entries.map((entry) => ({
-      userId: validated.userId,
-      name: entry.name,
-      calories: entry.calories,
-      protein: entry.protein,
-      carbs: entry.carbs,
-      fat: entry.fat,
-      imageUrl: entry.imageUrl,
-      consumedAt: new Date(entry.consumedAt),
-    }));
+    // Upsert por entrada: chave = userId + name + consumedAt
+    // Mesmo comportamento do daily-log/sync — o app manda o estado atual e a gente atualiza
+    const results = await Promise.all(
+      validated.entries.map((entry) => {
+        const consumedAt = new Date(entry.consumedAt);
 
-    const inserted = await FoodLog.insertMany(docs);
+        return FoodLog.findOneAndUpdate(
+          {
+            userId: validated.userId,
+            name: entry.name,
+            consumedAt,
+          },
+          {
+            $set: {
+              calories: entry.calories,
+              protein: entry.protein,
+              carbs: entry.carbs,
+              fat: entry.fat,
+              imageUrl: entry.imageUrl,
+            },
+          },
+          { upsert: true, returnDocument: 'after' },
+        );
+      }),
+    );
 
-    return inserted;
+    return results;
   }
 
   async getEntriesForUser(userId: string, date?: string) {
