@@ -1,21 +1,26 @@
-import { Request, Response } from 'express';
-import { logger } from '../utils/logger';
-import { DailyLogService } from '../services/dailyLog.service';
+import { Request, Response } from "express";
+import { logger } from "../utils/logger";
+import { DailyLogService } from "../services/dailyLog.service";
 
 const dailyLogService = new DailyLogService();
 
 export class DailyLogController {
   async syncDay(req: Request, res: Response) {
     try {
-      const result = await dailyLogService.syncDay(req.body);
+
+      
+      const result = await dailyLogService.syncDay({
+        ...req.body,
+        patient: (req as any).user.patientId,
+      });
 
       logger.info(
-        `📊 Log ${result.date.toISOString()} sincronizado (kcal: ${result.nutrition.kcal})`
+        `📊 Log ${result.date.toISOString()} sincronizado (kcal: ${result.nutrition.kcal})`,
       );
 
       res.status(200).json(result);
     } catch (error: any) {
-      logger.error('Erro ao sincronizar daily log:', error.message);
+      logger.error("Erro ao sincronizar daily log:", error.message);
 
       res.status(400).json({
         error: error.issues ?? error.message,
@@ -25,9 +30,13 @@ export class DailyLogController {
 
   async getLatestForPatient(req: Request, res: Response) {
     try {
-      const log = await dailyLogService.getLatestForPatient(req.params.id as string);
+      const log = await dailyLogService.getLatestForPatient(
+        req.params.id as string,
+      );
       if (!log) {
-        return res.status(404).json({ error: 'Nenhum registro encontrado para este paciente.' });
+        return res
+          .status(404)
+          .json({ error: "Nenhum registro encontrado para este paciente." });
       }
       res.status(200).json(log);
     } catch (error: any) {
