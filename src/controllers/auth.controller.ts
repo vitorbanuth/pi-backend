@@ -25,7 +25,7 @@ export class AuthController {
     try {
       const result = await authService.login(req.body);
 
-      logger.info(`🔑 Login realizado: ${result.user.email}`);
+      logger.info(`🔑 Login realizado: ${result.user.username}`);
 
       res.status(200).json(result);
     } catch (error: any) {

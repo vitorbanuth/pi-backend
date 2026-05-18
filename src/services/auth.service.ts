@@ -15,7 +15,7 @@ export const registerSchema = z.object({
 });
 
 export const loginSchema = z.object({
-  email: z.string().email("E-mail inválido"),
+  username: z.string().min(1, "Usuário obrigatório"),
   password: z.string().min(1, "Senha obrigatória"),
 });
 
@@ -63,7 +63,7 @@ export class AuthService {
   async login(data: unknown) {
     const validated = loginSchema.parse(data);
 
-    const user = await User.findOne({ email: validated.email }).select(
+    const user = await User.findOne({ username: validated.username }).select(
       "+password",
     );
     if (!user || !user.password) {
@@ -78,15 +78,17 @@ export class AuthService {
       throw new Error("Credenciais inválidas.");
     }
 
-    const token = jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, {
-      expiresIn: JWT_EXPIRES_IN,
-    });
+    const token = jwt.sign(
+      { id: user._id, username: user.username },
+      JWT_SECRET,
+      { expiresIn: JWT_EXPIRES_IN },
+    );
 
     return {
       token,
       user: {
         id: user._id,
-        name: user.username,
+        username: user.username,
         email: user.email,
       },
     };
