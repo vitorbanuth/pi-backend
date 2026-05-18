@@ -7,11 +7,17 @@ const dailyLogService = new DailyLogService();
 export class DailyLogController {
   async syncDay(req: Request, res: Response) {
     try {
+      const patientId = (req as any).user?.patientId;
 
-      
+      if (!patientId) {
+        return res.status(400).json({
+          error: 'Usuário não está vinculado a um paciente. Vincule-o pelo painel web.',
+        });
+      }
+
       const result = await dailyLogService.syncDay({
         ...req.body,
-        patient: (req as any).user.patientId,
+        patient: patientId,
       });
 
       logger.info(

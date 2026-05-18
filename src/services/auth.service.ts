@@ -79,7 +79,11 @@ export class AuthService {
     }
 
     const token = jwt.sign(
-      { id: user._id, username: user.username },
+      {
+        id: user._id,
+        username: user.username,
+        patientId: user.patientId,
+      },
       JWT_SECRET,
       { expiresIn: JWT_EXPIRES_IN },
     );
@@ -90,6 +94,7 @@ export class AuthService {
         id: user._id,
         username: user.username,
         email: user.email,
+        patientId: user.patientId,
       },
     };
   }
