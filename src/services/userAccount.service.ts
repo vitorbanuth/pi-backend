@@ -53,6 +53,16 @@ export class UserAccountService {
     return rest;
   }
 
+  async delete(id: string) {
+    if (!mongoose.isValidObjectId(id)) {
+      throw new Error("Id inválido.");
+    }
+    const deleted = await User.findByIdAndDelete(id);
+    if (!deleted) {
+      throw new Error("Usuário não encontrado.");
+    }
+  }
+
   async update(id: string, data: unknown) {
     const validated = updateSchema.parse(data);
 

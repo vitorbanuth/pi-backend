@@ -31,4 +31,14 @@ export class UserAccountController {
       res.status(status).json({ error: error.issues ?? error.message });
     }
   }
+
+  async delete(req: Request, res: Response) {
+    try {
+      await service.delete(req.params.id as string);
+      res.status(204).send();
+    } catch (error: any) {
+      const status = error.message === "Usuário não encontrado." ? 404 : 400;
+      res.status(status).json({ error: error.message });
+    }
+  }
 }

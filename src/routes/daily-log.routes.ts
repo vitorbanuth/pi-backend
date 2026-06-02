@@ -6,5 +6,6 @@ const router = Router();
 const controller = new DailyLogController();
 
 router.post('/sync', authMiddleware, (req, res) => controller.syncDay(req, res));
+router.get('/patient/:patientId', (req, res) => controller.getLogsForPatient(req, res));
 
 export default router;

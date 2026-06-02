@@ -49,4 +49,13 @@ export class DailyLogController {
       res.status(400).json({ error: error.message });
     }
   }
+
+  async getLogsForPatient(req: Request, res: Response) {
+    try {
+      const logs = await dailyLogService.getAllForPatient(req.params.patientId as string);
+      res.status(200).json(logs);
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
+    }
+  }
 }
