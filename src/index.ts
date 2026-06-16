@@ -10,6 +10,7 @@ import dailyLogRoutes from './routes/daily-log.routes';
 import authRoutes from './routes/auth.routes';
 import foodLogRoutes from './routes/food-log.routes';
 import userAccountRoutes from './routes/userAccount.routes';
+import mealSuggestionRoutes from './routes/mealSuggestion.routes';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -35,6 +36,7 @@ app.use('/api/daily-log', dailyLogRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/food-log', foodLogRoutes);
 app.use('/api/accounts', userAccountRoutes);
+app.use('/api/suggestions', mealSuggestionRoutes);
 
 // app.use('/api/foods', foodRoutes);
 // app.use('/api/water', waterRoutes);

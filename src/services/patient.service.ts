@@ -5,6 +5,10 @@ export class PatientService {
     return Patient.find().sort({ createdAt: -1 });
   }
 
+  async getById(id: string) {
+    return Patient.findById(id);
+  }
+
   async createPatient(data: any) {
     return Patient.create(data);
   }

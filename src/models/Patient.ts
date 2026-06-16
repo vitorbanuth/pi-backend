@@ -10,6 +10,7 @@ export interface IPatient extends Document {
   compliance?: number;
   waterGoal?: number;
   macroTargets?: {
+    kcal: number;
     protein: number;
     carbs: number;
     fat: number;
@@ -42,9 +43,10 @@ const PatientSchema = new Schema<IPatient>(
     waterGoal: { type: Number, default: 2000 },
 
     macroTargets: {
+      kcal:    { type: Number, default: 0 },
       protein: { type: Number, default: 0 },
-      carbs: { type: Number, default: 0 },
-      fat: { type: Number, default: 0 },
+      carbs:   { type: Number, default: 0 },
+      fat:     { type: Number, default: 0 },
     },
 
     latestLog: {

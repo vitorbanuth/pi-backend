@@ -35,6 +35,16 @@ import { PatientService } from '../services/patient.service';
 const patientService = new PatientService();
 
 export class PatientController {
+  async getById(req: Request, res: Response) {
+    try {
+      const patient = await patientService.getById(req.params.id as string);
+      if (!patient) return res.status(404).json({ error: 'Paciente não encontrado' });
+      res.status(200).json(patient);
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
+    }
+  }
+
   async getAll(req: Request, res: Response) {
     try {
       const patients = await patientService.getAllPatients();
